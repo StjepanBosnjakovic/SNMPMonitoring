@@ -1,12 +1,15 @@
+from models import User
+from extensions import db
+from flask_login import LoginManager, login_required, login_user, logout_user
+
+
 class UserManager:
-    def __init__(self, app, db):
+    def __init__(self, app):
         self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'login'
         self.login_manager.login_message = 'Please log in to access this page.'
         self.login_manager.login_message_category = 'info'
 
-        user_manager = FlaskUserManager(app, db, User)
-        app.user_manager = user_manager
 
         @self.login_manager.user_loader
         def load_user(user_id):

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from your_project import db
+from extensions import db
 
 class Device(db.Model):
     id = Column(Integer, primary_key=True)
@@ -13,3 +13,5 @@ class Device(db.Model):
 
     tenant = relationship('Tenant', back_populates='devices')
 
+    def __repr__(self):
+      return self._repr(id=self.id)

@@ -1,5 +1,5 @@
-from your_project.models import Device
-from your_project import db
+from models import Device
+from extensions import db
 
 class DeviceManager:
     def add_device(self, tenant_id, ip, community, version, poll_interval, oids):

@@ -1,5 +1,5 @@
-from your_project.models import Tenant
-from your_project import db
+from models import Tenant
+from extensions import db
 
 class TenantManager:
     def __init__(self):

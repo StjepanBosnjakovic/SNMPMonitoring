@@ -1,27 +1,28 @@
 # Import necessary libraries
 from flask import Flask, render_template, url_for, redirect
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_admin import Admin, AdminIndexView, expose
 from pysnmp.hlapi import *
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pysnmp.hlapi.asyncio import getCmd, SnmpEngine, CommunityData, UdpTransportTarget, ContextData, ObjectType, ObjectIdentity
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from extensions import db
 from models import Tenant, Device, User, Role
+from managers import DeviceManager, UserManager, TenantManager
+
 
 # Initialize Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///snmp_server.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db.init_app(app)
 # Initialize Flask-Login
-login_manager = LoginManager(app)
-user_manager = UserManager(app, db)
+device_manager = DeviceManager()
+user_manager = UserManager(app)
 tenant_manager = TenantManager()
-
 
 # Initialize Flask-Admin
 admin = Admin(app, name='SNMP Server', template_mode='bootstrap4')
@@ -160,7 +161,7 @@ class TenantAdminView(AdminIndexView):
 admin.add_view(TenantAdminView(name='Tenants'))
 
 # User loader for Flask-Login
-@login_manager.user_loader
+@user_manager.login_manager.user_loader
 def load_user(user_id):
     pass  # Implement user loading here
 
